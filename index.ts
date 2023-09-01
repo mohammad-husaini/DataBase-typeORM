@@ -1,8 +1,10 @@
 import express from "express";
 import { DataSource } from "typeorm";
+import { User } from "./db/entities/User.js";
+import userRouter from "./routers/user.js"
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+app.use(express.json());
 const dataSource = new DataSource({
   type: "mysql",
   host: "localhost",
@@ -10,12 +12,13 @@ const dataSource = new DataSource({
   username: "root",
   password: "",
   database: "registration",
-  entities: [],
+  entities: [User],
   logging: true,
+  synchronize: true
 });
-app.get("/", (req, res) => {
-  res.status(200).send("Welcome lovlly");
-});
+
+app.use('/user', userRouter)
+
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
